@@ -6,9 +6,9 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.sessions.models import Session
 from .utils import get_client_ip
 from backend.models import User
-from django.dispatch import receiver
 from .signals import object_viewd_signal
 
+# Create your models here.
 
 class ObjectViewedQuerySet(models.query.QuerySet):
     def by_model(self,model_class,model_queryset=False):
@@ -19,14 +19,13 @@ class ObjectViewedQuerySet(models.query.QuerySet):
             return model_class.objects.filter(pk__in=viewd_ids)
         return qs
 
+
 class ObjectViewedManager(models.Manager):
     def get_queryset(self):
         return ObjectViewedQuerySet(self.model, using=self._db)
 
     def by_model(self,model_class,model_queryset=False):
-        # print(model_queryset)
         self.get_queryset().by_model(model_class,model_queryset=model_queryset)
-
 
 
 class ObjectViewed(models.Model):
@@ -43,15 +42,9 @@ class ObjectViewed(models.Model):
         return str(self.id)
     
 
-def object_viewd_reciver(sender,instance,request,*args, **kwargs):
+def object_viewd_reciver(sender, instance, request, *args, **kwargs):
     c_type = ContentType.objects.get_for_model(sender)
-<<<<<<< HEAD
-    user = None
-    if request.user.is_authenticated:
-        user = request.user
-=======
     user = request.user
->>>>>>> 712d65c925dc938843db01987a75d4785d2d7a91
     new_view_obj = ObjectViewed.objects.create(
         user=user,
         object_id=instance.id,
@@ -60,13 +53,3 @@ def object_viewd_reciver(sender,instance,request,*args, **kwargs):
     )
 
 object_viewd_signal.connect(object_viewd_reciver)
-
-
-
-
-
-
-
-
-
-

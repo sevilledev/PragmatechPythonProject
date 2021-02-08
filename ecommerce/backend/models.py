@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-# Create your models here.
 
+# Create your models here.
 
 class User(AbstractUser):
     phone = models.IntegerField(blank=True, null=True)
@@ -21,13 +21,7 @@ class UserAddress(models.Model):
 
 
 class UserOtp(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE,related_name='user_otp')
+    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='user_otp')
     otp = models.CharField(max_length=6)
     rpt = models.IntegerField(default=3)
     date = models.DateTimeField(auto_now=True)
-
-
-
-
-
-
