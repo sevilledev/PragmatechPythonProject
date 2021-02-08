@@ -51,6 +51,11 @@ def user_billing_profile_create(sender, instance, *args, **kwargs):
     BillingProfile.objects.get_or_create(user=instance) # burda error var hocam:D
 
 
+class CardManager(models.Manager):
+    def all(self, *args, **kwargs):
+        return self.get_queryset().filter(active=True)
+
+
 class Card(models.Model):
     billing_profile = models.ForeignKey(BillingProfile, on_delete=models.CASCADE)
     card_name = models.CharField(max_length=50, blank=True,null=True)
@@ -62,3 +67,5 @@ class Card(models.Model):
     is_default = models.BooleanField(default=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     update = models.DateTimeField(auto_now=True)
+
+    objects = CardManager()
