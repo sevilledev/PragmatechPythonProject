@@ -13,7 +13,7 @@ ORDER_STATUS_CHOICES=(
     ('refunded', 'Refunded')
 )
 
-class OrderQuerySet(models.QuerySet):
+class OrderQuerySet(models.query.QuerySet):
     def created_orders(self):
         return self.filter(status='created')
 
@@ -30,17 +30,6 @@ class OrderManager(models.Manager):
     def get_queryset(self):
         return OrderQuerySet(self.model, using=self._db)
 
-    def created_orders(self):
-        return self.get_queryset().created_orders()
-
-    def paid_orders(self):
-        return self.get_queryset().paid_orders()
-
-    def shipped_orders(self):
-        return self.get_queryset().shipped_orders()
-
-    def refunded_orders(self):
-        return self.get_queryset().refunded_orders()
 
 class Order(models.Model):
     billing_profile = models.ForeignKey(BillingProfile,on_delete=models.CASCADE,related_name='billing_profile',blank=True,null=True)
