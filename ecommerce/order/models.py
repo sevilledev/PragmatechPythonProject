@@ -3,6 +3,7 @@ from address.models import Address
 from billing.models import BillingProfile
 from backend.models import User
 from cart.models import Cart
+from datetime import datetime, timedelta
 
 # Create your models here.
 
@@ -25,6 +26,11 @@ class OrderQuerySet(models.query.QuerySet):
 
     def refunded_orders(self):
         return self.filter(status='refunded')
+
+    def filter_for_days_orders(self, days):
+        delta = timedelta(days=days)
+        last_date = datetime.now() - delta
+        return self.filter(timestamp__gte=last_date)
 
 class OrderManager(models.Manager):
     def get_queryset(self):
