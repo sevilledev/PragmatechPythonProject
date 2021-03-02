@@ -32,7 +32,11 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+<<<<<<< HEAD
     'base',
+=======
+    'brand',
+>>>>>>> c440e2c153e5286d497f9eb4be5b48029f9a9fba
     'address',
     'order',
     'category',
