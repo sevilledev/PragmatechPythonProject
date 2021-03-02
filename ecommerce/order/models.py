@@ -4,7 +4,7 @@ from billing.models import BillingProfile
 from backend.models import User
 from cart.models import Cart
 from datetime import datetime, timedelta
-from django.utils import timezone
+
 # Create your models here.
 
 ORDER_STATUS_CHOICES=(
