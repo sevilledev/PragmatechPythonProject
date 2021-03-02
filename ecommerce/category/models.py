@@ -23,3 +23,16 @@ class Category(models.Model):
     def products_in_category(slug):
         category = Category.objects.get(slug=slug)
         return category.product_set.all()
+
+class SubCategory(models.Model):
+    sub_category = models.ForeignKey(Category,on_delete=models.CASCADE,related_name='q')
+    name = models.CharField(max_length=50)
+    slug = models.SlugField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = gen_slug(self.name)
+        super().save(*args, **kwargs)

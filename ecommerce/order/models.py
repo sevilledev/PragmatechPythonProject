@@ -15,57 +15,44 @@ ORDER_STATUS_CHOICES=(
 )
 
 class OrderQuerySet(models.QuerySet):
-
-    def by_status(self,status='created'):
+    def by_status(self, status='created'):
         return self.filter(status=status)
-
 
     def by_range(self, start_date, end_date=None):
         if end_date is None:
             return self.filter(update__gte=start_date)
         return self.filter(update__gte=start_date).filter(update__lte=end_date)
 
-
-    def by_weeks_range(self,weeks_ago=2,number_of_weeks=3):
+    def by_weeks_range(self, weeks_ago=3, number_of_weeks=2):
         if number_of_weeks > weeks_ago:
             number_of_weeks = weeks_ago
         day_ago_start = weeks_ago * 7
-        print(day_ago_start)
         day_ago_end = day_ago_start - (number_of_weeks * 7)
-        print(day_ago_end)
         start_date = timezone.now() - timedelta(days=day_ago_start)
-        print(timedelta(days=day_ago_start))
         end_date = timezone.now() - timedelta(days=day_ago_end)
-        print(end_date)
-        print(start_date)
+
+        return self.by_range(start_date, end_date=end_date)
+
+    def by_days_range(self, days_ago=12, number_of_days=3):
+        if number_of_days > days_ago:
+            number_of_days = days_ago            
+        start_date = timezone.now() - timedelta(days=days_ago)
+        end_date = timezone.now() - timedelta(days=days_ago - number_of_days)
+
         return self.by_range(start_date,end_date=end_date)
-
-
-
-    # def created_orders(self):
-    #     return self.filter(status='created')
-    #
-    # def paid_orders(self):
-    #     return self.filter(status='paid')
-    #
-    # def shipped_orders(self):
-    #     return self.filter(status='shipped')
-    #
-    # def refunded_orders(self):
-    #     return self.filter(status='refunded')
-    #
-    # def filter_for_days_orders(self, days):
-    #     delta = timedelta(days=days)
-    #     last_date = datetime.now() - delta
-    #     return self.filter(timestamp__gte=last_date)
 
 class OrderManager(models.Manager):
     def get_queryset(self):
         return OrderQuerySet(self.model, using=self._db)
-    def by_weeks_range(self):
-        return self.get_queryset().by_weeks_range()
+
     def by_status(self,status='created'):
         return self.get_queryset().by_status(status=status)
+
+    def by_weeks_range(self):
+        return self.get_queryset().by_weeks_range()
+
+    def by_days_range(self):
+        return self.get_queryset().by_days_range()
 
 class Order(models.Model):
     billing_profile = models.ForeignKey(BillingProfile,on_delete=models.CASCADE,related_name='billing_profile',blank=True,null=True)

@@ -8,8 +8,6 @@ import json
 
 
 
-
-
 def category(request):
     category = Category.objects.all()
     context = {
