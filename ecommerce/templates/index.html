@@ -25,8 +25,25 @@
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
                                         {% for sub_category in category.sub_categories.all %}
-                                            <li >
-                                                <a class="dropdown-item " href="#">{{sub_category.name}}</a>
+                                            {{sub_category.brands.0}}
+                                            <li class="nav-item dropdown">
+                                                <a class="dropdown-item dropdown-toggle" href="#" id="navbarScrollingDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{sub_category.name}}</a>
+                                                <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown2">
+                                                    {% for brand in sub_category.brands.all %}
+                                                        <li class="nav-item dropdown">
+                                                            <a class="dropdown-item " href="{{brand.get_absolute_url}}" id="navbarScrollingDropdown3" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{brand.name}}</a>
+                                                            <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown3">
+                                                                {% for product in brand.products.all %}
+                                                                    <li class="nav-item dropdown">
+                                                                        <a class="dropdown-item dropdown-toggle" href="#">{{product.product_name}}</a>
+                                                                        <hr>
+                                                                    </li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                            <hr>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
                                                 <hr>
                                             </li>
                                         {% endfor %}
