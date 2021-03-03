@@ -1,12 +1,11 @@
 from django.shortcuts import render
 from category.models import Category
+
 # Create your views here.
 
 def index(request):
-    category = Category.objects.prefetch_related('q').all()
-
-
+    categories = Category.objects.prefetch_related('sub_categories').all()
     context = {
-        'category':category,
+        'categories':categories,
     }
     return render(request,'index.html',context)

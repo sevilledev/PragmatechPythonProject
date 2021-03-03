@@ -32,11 +32,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-<<<<<<< HEAD
     'base',
-=======
     'brand',
->>>>>>> c440e2c153e5286d497f9eb4be5b48029f9a9fba
     'address',
     'order',
     'category',
@@ -90,9 +87,9 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-   'default': {
-       'ENGINE': 'django.db.backends.sqlite3',
-       'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 

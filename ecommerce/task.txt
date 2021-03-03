@@ -1,6 +1,0 @@
-1: Subcategory model yaradilmalidir ve views de gondermek +
-2: Brand modelin yazilmasi ve views de gondermek -
-3: Mehsullar branda gore filterlemek ve views de gondermek
-################## Static sehiveler ###############
-4: Slider ucun model yazilmasi ve views de gondermek
-5: Gunun teklifi ucun model yazmag ve views de gondermek

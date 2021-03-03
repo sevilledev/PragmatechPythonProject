@@ -69,5 +69,3 @@ class Card(models.Model):
     update = models.DateTimeField(auto_now=True)
 
     objects = CardManager()
-
-

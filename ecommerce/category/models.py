@@ -21,16 +21,6 @@ class Category(models.Model):
             self.cat_slug = gen_slug(self.name)
         super().save(*args, **kwargs)
 
-<<<<<<< HEAD
-    def products_in_category(slug):
-        category = Category.objects.get(slug=slug)
-        return category.product_set.all()
-
-class SubCategory(models.Model):
-    sub_category = models.ForeignKey(Category,on_delete=models.CASCADE,related_name='q')
-    name = models.CharField(max_length=50)
-    slug = models.SlugField(blank=True)
-=======
     # def products_in_category(slug):
     #     category = Category.objects.get(slug=slug)
     #     return category.product_set.all()
@@ -43,19 +33,12 @@ class SubCategory(models.Model):
 class SubCategory(models.Model):
     name = models.CharField(max_length=50)
     subcat_slug = models.SlugField(blank=True)
-    category = models.ForeignKey(Category,on_delete=models.CASCADE,blank=True,null=True)
+    category = models.ForeignKey(Category,on_delete=models.CASCADE,blank=True,null=True,related_name='sub_categories')
     brands = models.ManyToManyField(Brand,related_name='subcategory_brands')
->>>>>>> c440e2c153e5286d497f9eb4be5b48029f9a9fba
 
     def __str__(self):
         return self.name
 
-<<<<<<< HEAD
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = gen_slug(self.name)
-        super().save(*args, **kwargs)
-=======
     def get_absolute_url(self):
         return reverse("subcategory_brands", kwargs={"cat_slug":self.category.cat_slug,"subcat_slug": self.subcat_slug})
 
@@ -71,4 +54,3 @@ class SubCategory(models.Model):
     def brands_in_subcategory(subcat_slug):
         subcategory = SubCategory.objects.get(subcat_slug=subcat_slug)
         return subcategory.brands.all()
->>>>>>> c440e2c153e5286d497f9eb4be5b48029f9a9fba
