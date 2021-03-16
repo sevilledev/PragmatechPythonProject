@@ -84,8 +84,11 @@
                     <a href="#" class="btn btn-primary">Wishlist</a>
                 </div>
             </div>
-            {% endfor %}
-            {% for m in request.session.wishlist%}{{m}}<br>{% endfor %}
+            <div class="delete card" style="width: 18rem;" datas-id="{{x.id}}">
+                    <a href="#" class="btn btn-primary">Delete Wishlist</a>
+            </div>
+            {% endfor%}
+            {{request.session.wishlist}}
         </div>
 
 
@@ -128,6 +131,26 @@ $(document).ready(function(){
             data:data,
             success: function(data){
                 top.location.fref = '{% url "index" %}';
+            }
+        })
+    })
+})
+</script>
+<script>
+$(document).ready(function(){
+    $('.delete').on('click', function(e){
+        e.preventDefault()
+        id = $(this).attr('datas-id')
+        data = {
+            id:id
+        }
+        $.ajax({
+            headers: {"X-CSRFToken":getCookie("csrftoken")},
+            type: "POST",
+            url: '{% url 'remove_wishlist' %}',
+            data:data,
+            success: function(data){
+                console.log(data);
             }
         })
     })
