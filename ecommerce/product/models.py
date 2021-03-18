@@ -51,8 +51,8 @@ class Product(models.Model):
         return self.product_name
 
     def get_absolute_url(self):
-        return reverse("product_detail", kwargs={"slug": self.slug})
-        
+        return reverse("product_details", kwargs={"cat_slug":self.product_brand.sub_category.category.cat_slug,"subcat_slug":self.product_brand.sub_category.subcat_slug,"brand_slug":self.product_brand.brand_slug,"product_slug":self.slug})
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = gen_slug(self.product_name)

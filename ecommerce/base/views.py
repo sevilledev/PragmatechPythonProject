@@ -15,9 +15,9 @@ def index(request):
     context = {
         'categories':categories,
         'sliders':sliders,
-        'pro':products, 
+        'products':products, 
     }
-    return render(request,'index.html',context)
+    return render(request,'index.html', context)
 
 def add_to_wishlist(request,id):
     if request.method == "POST":
@@ -41,7 +41,6 @@ def remove_wishlist(request):
         for i in request.session['wishlist']:
             if str(i['id']) == id:
                 i.clear()
-                
         while {} in request.session['wishlist']:
             request.session['wishlist'].remove({})
         if not request.session['wishlist']:
