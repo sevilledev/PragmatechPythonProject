@@ -1,0 +1,57 @@
+{%load static%}
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+        <data id="change_quantity_route" value="{%url 'change_quantity' id=0 qyt=1%}"></data>
+        <title>{{x.name}}</title>
+        <script src="{%static 'js/jquery-ajax.js'%}"></script>
+        <script src="{%static 'js/ajaxsimpler.js'%}"></script>
+    </head>
+    <body>
+        <br>
+        <br>
+        <div class="container">
+            <div class="row">
+                {% for x,q in products %}
+                    <div class="col-4">
+                        <div class="card" style="width: 18rem;">
+                            <div class="card-body">
+                                <a href="{{x.get_absolute_url}}"><h3>{{x.product_name}}</h3></a>
+                                <h4>{{x.product_price}}</h4>
+                                {%if x.product_discount_price%}
+                                    <h4>{{x.product_discount_price}}</h4>
+                                {%endif%}
+                                <div class="">
+                                    <input type="number" class="quantity-inputs" value="{{q}}" min="1" data-id="{{x.id}}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <h2>{{total}}</h2>
+            <a href="{%url 'confirm_cart'  %}" class="btn btn-primary">Confirm</a>
+        </div>
+
+        <script>
+        var ajx = window.AjaxSimpler.create()
+        ajx.csrftoken = 'csrftoken'
+        document.querySelectorAll('.quantity-inputs').forEach(qi=>{
+            qi.addEventListener('change',e=>{
+                var [id,quantity] = [qi.getAttribute('data-id'),qi.value]
+                var routeLink = document.getElementById('change_quantity_route').getAttribute('value').replace('0',id).replace('1',quantity)
+                ajx.POST(routeLink).then((e)=>{
+                    console.log("CHANGED!!!")
+                })
+            })
+        })
+        </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+        
+    </body>
+</html>
