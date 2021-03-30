@@ -67,17 +67,14 @@ def confirm_cart(request):
         cart_products = []
         for product in products:
             p_data = list(product)
-            print(p_data)
-            cart_product = CartProduct(product=p_data[0], quantity=p_data[1])
-            cart_product.save()
-            cart_products.append(cart_product)
-        cart = Cart()
-        cart.save()
-        for cart_product in cart_products:
-            cart.products.add(cart_product)
-        try :
-            cart.save()
-        except :
-            cart.delete()
-        
+            cart_product,cart_product_value = CartProduct.objects.get_or_create(product=p_data[0], quantity=p_data[1])
+            cart_products.append(cart_product.id)
+        #print(request.session['cart_id'])
+        cart = Cart.object.new_or_get(request)
+        for c in cart_products:
+            cart[0].products.add(c)
+            request.session['cart_id'] = cart[0].id
+    
+
+      
     return render(request, 'confirm_cart.html', context)
