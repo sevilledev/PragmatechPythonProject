@@ -7,8 +7,11 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import *
+from rest_framework import permissions, viewsets
 
-# Create your views here.
+class ModelViewSet(viewsets.ModelViewSet):
+    serializer_class = ProductSerializers
+    queryset = Product.objects.all()
 
 class ProductViews(APIView):
     def get(self,request):
@@ -16,7 +19,7 @@ class ProductViews(APIView):
         serializer = ProductSerializers(products, many=True)
         return Response(serializer.data)
 
-    def post(self, request):
+    def post(self,request):
         serializer = ProductSerializers(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -25,10 +28,25 @@ class ProductViews(APIView):
 
 
 class ProductDetailViews(APIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
     def get(self,request,id):
         product = Product.objects.get(id=id)
         serializer = ProductDetailSerializers(product)
         return Response(serializer.data)
+
+    def put(self,request,id):
+        product = Product.objects.get(id=id)
+        serializer = ProductSerializers(product,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+
+    def delete(self,request,id):
+        product = Product.objects.get(id=id)
+        del product
+        return Response({"success":"Product deleted!"})
 
 def index(request):
     categories = Category.objects.prefetch_related('sub_categories').all()

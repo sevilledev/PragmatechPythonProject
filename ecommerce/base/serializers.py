@@ -1,12 +1,30 @@
 from rest_framework import serializers
-from product.models import Product
+from product.models import Product, ProductFile
 from brand.models import Brand
+from category.models import SubCategory, Category
 
+
+class CategorySerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+class SubCategorySerializers(serializers.ModelSerializer):
+    category = CategorySerializers()
+    class Meta:
+        model = SubCategory
+        fields = '__all__'
 
 class BrandSerializers(serializers.ModelSerializer):
+    sub_category = SubCategorySerializers()
     class Meta:
         model = Brand
-        fields = ['name',]
+        exclude = ['brand_slug',]
+
+class ProductFileSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = ProductFile
+        exclude = ['product',]
 
 class ProductSerializers(serializers.ModelSerializer):
     class Meta:
@@ -15,6 +33,7 @@ class ProductSerializers(serializers.ModelSerializer):
 
 class ProductDetailSerializers(serializers.ModelSerializer):
     product_brand = BrandSerializers(read_only=True)
+    productfile_set = ProductFileSerializers(many=True)
     class Meta:
         model = Product
         fields = '__all__' 
