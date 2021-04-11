@@ -24,7 +24,7 @@ class Category(models.Model):
     def subcategories_in_category(cat_slug):
         category = Category.objects.get(cat_slug=cat_slug)
         return category.sub_categories.all()
-    
+        
 
 class SubCategory(models.Model):
     name = models.CharField(max_length=50)

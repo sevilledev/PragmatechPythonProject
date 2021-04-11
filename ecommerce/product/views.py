@@ -38,7 +38,7 @@ def add_to_history(request, id):
 #         context = super(ProductDetail, self).get_context_data(**kwargs)
 #         context["cart"] = 'okey' # niye 'okey' yazmisiq bura?)
 #         return context
-    
+
 #     def get_object(self, *args, **kwargs):
 #         request = self.request
 #         id = self.kwargs.get('id')

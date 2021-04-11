@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Product, CartProduct, Cart
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
@@ -21,7 +22,8 @@ def cart_products(request):
         'total':total
     }
     return render(request, 'cart_products.html', context)
-
+    
+@csrf_exempt
 def add_to_cart(request, id):
     if request.method == "POST":
         if not request.session.get('cart'):
@@ -39,6 +41,7 @@ def add_to_cart(request, id):
 
     return redirect('cart_products')
 
+@csrf_exempt
 def change_quantity(request, id, qyt):
     id = int(id)
     qyt = int(qyt)
@@ -54,7 +57,7 @@ def change_quantity(request, id, qyt):
         print(new_session_data)
     return redirect('cart_products')
 
-    
+@csrf_exempt
 def confirm_cart(request):
     products = []
     for product in request.session['cart']:

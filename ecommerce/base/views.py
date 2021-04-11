@@ -3,8 +3,32 @@ from category.models import *
 from staticpage.models import *
 from product.models import Product
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializers import *
 
 # Create your views here.
+
+class ProductViews(APIView):
+    def get(self,request):
+        products = Product.objects.all()
+        serializer = ProductSerializers(products, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = ProductSerializers(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+
+
+class ProductDetailViews(APIView):
+    def get(self,request,id):
+        product = Product.objects.get(id=id)
+        serializer = ProductDetailSerializers(product)
+        return Response(serializer.data)
 
 def index(request):
     categories = Category.objects.prefetch_related('sub_categories').all()
@@ -18,7 +42,8 @@ def index(request):
         'products':products, 
     }
     return render(request,'index.html', context)
-
+    
+@csrf_exempt
 def add_to_wishlist(request,id):
     if request.method == "POST":
         if not request.session.get('wishlist'):
@@ -34,7 +59,7 @@ def add_to_wishlist(request,id):
         request.session.modifier = True
     return redirect('index')
 
-
+@csrf_exempt
 def remove_wishlist(request):
     if request.method == 'POST':
         id = request.POST.get('id')
