@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import *
-from rest_framework import permissions, viewsets
+from rest_framework import permissions, viewsets, status
 
 class ModelViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializers
@@ -36,12 +36,14 @@ class ProductDetailViews(APIView):
         return Response(serializer.data)
 
     def put(self,request,id):
-        product = Product.objects.get(id=id)
-        serializer = ProductSerializers(product,data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors)
+        if request.user.is_delivery():
+            product = Product.objects.get(id=id)
+            serializer = ProductSerializers(product,data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors)
+        return Response(status=status.HTTP_409_CONFLICT)
 
     def delete(self,request,id):
         product = Product.objects.get(id=id)

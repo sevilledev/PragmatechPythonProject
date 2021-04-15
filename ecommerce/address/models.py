@@ -37,6 +37,7 @@ class Address(models.Model):
         )
     
     def get_address(self):
+        for_name = self.name
         return "{for_name}\n{line1}\n{line2}\n{city}\n{state}\n{postal_code},\n{country}".format(
             for_name = for_name or "",
             line1 = self.address_line_1,
