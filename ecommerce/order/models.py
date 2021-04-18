@@ -3,7 +3,7 @@ from address.models import Address
 from billing.models import BillingProfile
 from backend.models import User
 from cart.models import Cart
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 # Create your models here.
 
@@ -61,7 +61,7 @@ class Order(models.Model):
     billing_address = models.ForeignKey(Address,on_delete=models.CASCADE,related_name='billing_address',blank=True,null=True)
     shipping_address_final = models.TextField(blank=True,null=True)
     billing_address_final = models.TextField(blank=True,null=True)
-    cart = models.ForeignKey(Cart,on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart,on_delete=models.CASCADE,related_name="cart")
     status = models.CharField(max_length=20,default='created',choices=ORDER_STATUS_CHOICES)
     shipping_total = models.DecimalField(default=1.00,max_digits=60,decimal_places=2)
     is_active = models.BooleanField(default=True)
