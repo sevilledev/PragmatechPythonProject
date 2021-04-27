@@ -4,6 +4,11 @@ from rest_framework.response import Response
 from rest_framework import permissions
 from .serializers import *
 from backend.models import User
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework import generics
+
+class LoginTokenView(TokenObtainPairView):
+    serializer_class = TokenPairSerializers
 
 class UserDetail(APIView):
     permission_classes = [permissions.AllowAny]
