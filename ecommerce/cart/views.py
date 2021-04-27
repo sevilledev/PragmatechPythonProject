@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Product, CartProduct, Cart
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 
 # Create your views here.
 

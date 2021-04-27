@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import *
 from rest_framework import permissions, viewsets, status
+from typing import ItemsView
 
 class ModelViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializers
@@ -28,7 +29,7 @@ class ProductViews(APIView):
 
 
 class ProductDetailViews(APIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.AllowAny]
 
     def get(self,request,id):
         product = Product.objects.get(id=id)

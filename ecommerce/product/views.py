@@ -32,7 +32,7 @@ def add_to_history(request, id):
 
 # class ProductDetail(ObjectViewedMixin, DetailView):
 #     queryset = Product.objects.all()
-#     template_name = 'products/product.html'
+#     template_name = 'product.html'
 
 #     def get_context_data(self, **kwargs):
 #         context = super(ProductDetail, self).get_context_data(**kwargs)
@@ -52,4 +52,4 @@ def add_to_history(request, id):
 #         'products': products,
 #         'user': request.user
 #     }
-#     return render(request, 'products/product.html', context)
+#     return render(request, 'product.html', context)

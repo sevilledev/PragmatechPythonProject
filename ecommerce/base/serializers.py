@@ -26,14 +26,30 @@ class ProductFileSerializers(serializers.ModelSerializer):
         model = ProductFile
         exclude = ['product',]
 
+class ProductPrice(serializers.Field):
+    def to_representation(self, value):
+        price_list = {
+            "initial amount" : value.product_price,
+            "discount amount" : value.product_discount,
+            "discounted price" : value.product_discount_price
+        }
+        return price_list
+
 class ProductSerializers(serializers.ModelSerializer):
+    product_price_list = ProductPrice(source="*")
+    category = serializers.SerializerMethodField()
+
     class Meta:
         model = Product
-        fields = '__all__' 
+        exclude = ['product_price','product_discount','product_discount_price',] 
+
+    def get_category(self,obj):
+        return obj.product_brand.sub_category.category.name
 
 class ProductDetailSerializers(serializers.ModelSerializer):
     product_brand = BrandSerializers(read_only=True)
     productfile_set = ProductFileSerializers(many=True)
+
     class Meta:
         model = Product
         fields = '__all__' 
