@@ -10,6 +10,12 @@ from rest_framework import generics
 class LoginTokenView(TokenObtainPairView):
     serializer_class = TokenPairSerializers
 
+
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = RegisterSerializers
+
+
 class UserDetail(APIView):
     permission_classes = [permissions.AllowAny]
     def get(self, request):
