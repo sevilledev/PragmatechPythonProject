@@ -8,6 +8,9 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 
+class EmailSerializers(serializers.Serializer):
+    email = serializers.EmailField()
+
 
 class TokenPairSerializers(TokenObtainPairSerializer):
     @classmethod
