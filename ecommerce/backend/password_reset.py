@@ -2,6 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.core.mail import send_mail
 from django.conf import settings
+from django.shortcuts import redirect
+from django.http import JsonResponse
 from .models import *
 from .serializers import *
 
@@ -24,4 +26,16 @@ class ResetPasswordEmail(APIView):
 
             return Response({'success':'Email has sent!'})
         return Response({'data':'None'})
+
+def check_email(request):
+    if request.method == "GET":
+        token = request.GET.get('token')
+        try:
+            check_token = UserVerify.objects.get(token=token)
+            return redirect('http://127.0.0.1:8000/password_reset/')
+            
+            # check_token.delete() 
+        except:
+            return JsonResponse({"error" : "Invalid token"})
+    return JsonResponse({"data" : "None"})
 
