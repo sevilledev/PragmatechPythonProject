@@ -32,10 +32,21 @@ def check_email(request):
         token = request.GET.get('token')
         try:
             check_token = UserVerify.objects.get(token=token)
-            return redirect('http://127.0.0.1:8000/password_reset/')
-            
-            # check_token.delete() 
+            return redirect('http://127.0.0.1:8000/password_reset/?token=' + f"{check_token.token}")
         except:
             return JsonResponse({"error" : "Invalid token"})
     return JsonResponse({"data" : "None"})
 
+class PasswordResetView(APIView):
+    serializer_class = PasswordResetSerializers
+
+    def post(self,request):
+        serializers = self.serializer_class(data=request.data)
+        serializers.is_valid(raise_exception=True)
+        token = request.GET.get('token')
+        check_token = UserVerify.objects.get(token=token)
+        get_user = User.objects.get(id=check_token.user.id)
+        get_user.set_password(serializers.validated_data['password'])
+        get_user.save()
+        check_token.delete()
+        return Response({"success":"Password reseted successfully!"})

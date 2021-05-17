@@ -11,6 +11,14 @@ from django.contrib.auth.password_validation import validate_password
 class EmailSerializers(serializers.Serializer):
     email = serializers.EmailField()
 
+class PasswordResetSerializers(serializers.Serializer):
+    password = serializers.CharField(write_only=True,required=True,validators=[validate_password]) 
+    password_confirm = serializers.CharField(write_only=True,required=True)
+    
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password_confirm']:
+            raise serializers.ValidationError({'password':"Password confirm don't match with password"})
+        return attrs      
 
 class TokenPairSerializers(TokenObtainPairSerializer):
     @classmethod
