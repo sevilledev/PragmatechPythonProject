@@ -6,3 +6,4 @@ from .models import *
 admin.site.register(User)
 admin.site.register(UserAddress)
 admin.site.register(UserVerify)
+admin.site.register(Profile)

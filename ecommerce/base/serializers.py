@@ -54,3 +54,4 @@ class ProductDetailSerializers(serializers.ModelSerializer):
         model = Product
         fields = '__all__' 
 
+ 

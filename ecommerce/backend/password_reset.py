@@ -1,3 +1,4 @@
+from datetime import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.core.mail import send_mail
@@ -6,6 +7,7 @@ from django.shortcuts import redirect
 from django.http import JsonResponse
 from .models import *
 from .serializers import *
+from utils.token_time import check_time_token
 
 
 class ResetPasswordEmail(APIView):
@@ -30,9 +32,24 @@ class ResetPasswordEmail(APIView):
 def check_email(request):
     if request.method == "GET":
         token = request.GET.get('token')
+        register = request.GET.get('register')
         try:
             check_token = UserVerify.objects.get(token=token)
-            return redirect('http://127.0.0.1:8000/password_reset/?token=' + f"{check_token.token}")
+            time_token = check_time_token(check_token.date)
+            if register is None:
+                if time_token == True:
+                    return redirect('http://127.0.0.1:8000/password_reset/?token=' + f"{check_token.token}")
+                else:
+                    return JsonResponse({"error":"Token time finished!"})
+            else:
+                if time_token == False: 
+                    check_token.delete()
+                    return JsonResponse({"error":"Token time finished!"}) 
+                get_user = User.objects.get(id=check_token.user.id)
+                get_user.is_active = True
+                get_user.save()
+                check_token.delete()
+                return redirect('http://127.0.0.1:8000/api/login')
         except:
             return JsonResponse({"error" : "Invalid token"})
     return JsonResponse({"data" : "None"})
@@ -44,9 +61,13 @@ class PasswordResetView(APIView):
         serializers = self.serializer_class(data=request.data)
         serializers.is_valid(raise_exception=True)
         token = request.GET.get('token')
-        check_token = UserVerify.objects.get(token=token)
-        get_user = User.objects.get(id=check_token.user.id)
-        get_user.set_password(serializers.validated_data['password'])
-        get_user.save()
-        check_token.delete()
-        return Response({"success":"Password reseted successfully!"})
+        try:
+            check_token = UserVerify.objects.get(token=token)
+            get_user = User.objects.get(id=check_token.user.id)
+            get_user.set_password(serializers.validated_data['password'])
+            get_user.save()
+            check_token.delete()
+            return Response({"success":"Password reseted successfully!"})
+        except:
+            return Response({"error":"Token failed!"})
+            

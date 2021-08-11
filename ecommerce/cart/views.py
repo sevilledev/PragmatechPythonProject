@@ -13,10 +13,10 @@ def cart_products(request):
         id = p_data['id']
         quantity = p_data['quantity']
         obj = Product.objects.get(id=id)
-        products.append((obj,quantity))
-        if obj.product_discount :
+        products.append((obj, quantity))
+        if obj.product_discount:
             total += obj.product_discount_price * quantity
-        else :
+        else:
             total += obj.product_price * quantity
     context = {
         'products':products,

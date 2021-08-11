@@ -22,7 +22,7 @@ def upload_product_file_loc(instance,filename):
         if qs.exists():
             _id = qs.first().id + 1
         else:
-            _id = 0
+            _id = 0 
     if not slug:
         slug = gen_slug(instance.product)
     location = "product/{slug}/{id}/".format(slug=slug, id=_id)

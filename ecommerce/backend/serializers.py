@@ -1,5 +1,5 @@
 from rest_framework import serializers, permissions
-from .models import User
+from .models import *
 from billing.models import BillingProfile
 from order.models import Order
 from cart.models import Cart, CartProduct
@@ -54,7 +54,8 @@ class RegisterSerializers(serializers.ModelSerializer):
             username = validated_data['username'],
             email = validated_data['email'],
             last_name = validated_data['last_name'],
-            first_name = validated_data['first_name']
+            first_name = validated_data['first_name'],
+            is_active = False
         )
         user.set_password(validated_data['password'])
         user.save()
@@ -91,3 +92,8 @@ class UserSerializers(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['billing_user',]
+
+class ProfileSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = '__all__'

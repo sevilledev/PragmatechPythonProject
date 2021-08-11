@@ -9,4 +9,5 @@ urlpatterns=[
     path('api/reset/password', ResetPasswordEmail.as_view()),
     path('check_email/', check_email),
     path('api/password_reset', PasswordResetView.as_view()),
+    path('api/profile/<int:id>',ProfileView.as_view()),
 ]

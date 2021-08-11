@@ -10,17 +10,19 @@ from .serializers import *
 from rest_framework import permissions, viewsets, status
 from typing import ItemsView
 
+
 class ModelViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializers
     queryset = Product.objects.all()
 
+
 class ProductViews(APIView):
-    def get(self,request):
+    def get(self, request):
         products = Product.objects.all()
         serializer = ProductSerializers(products, many=True)
         return Response(serializer.data)
 
-    def post(self,request):
+    def post(self, request):
         serializer = ProductSerializers(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -31,25 +33,26 @@ class ProductViews(APIView):
 class ProductDetailViews(APIView):
     permission_classes = [permissions.AllowAny]
 
-    def get(self,request,id):
+    def get(self, request, id):
         product = Product.objects.get(id=id)
         serializer = ProductDetailSerializers(product)
         return Response(serializer.data)
 
-    def put(self,request,id):
+    def put(self, request, id):
         if request.user.is_delivery():
             product = Product.objects.get(id=id)
-            serializer = ProductSerializers(product,data=request.data)
+            serializer = ProductSerializers(product, data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
             return Response(serializer.errors)
         return Response(status=status.HTTP_409_CONFLICT)
 
-    def delete(self,request,id):
+    def delete(self, request, id):
         product = Product.objects.get(id=id)
         del product
-        return Response({"success":"Product deleted!"})
+        return Response({"success": "Product deleted!"})
+
 
 def index(request):
     categories = Category.objects.prefetch_related('sub_categories').all()
@@ -58,27 +61,30 @@ def index(request):
     print(request.session.items())
     products = Product.objects.all()[:10]
     context = {
-        'categories':categories,
-        'sliders':sliders,
-        'products':products, 
+        'categories': categories,
+        'sliders': sliders,
+        'products': products,
     }
-    return render(request,'index.html', context)
-    
+    return render(request, 'index.html', context)
+
+
 @csrf_exempt
-def add_to_wishlist(request,id):
+def add_to_wishlist(request, id):
     if request.method == "POST":
         if not request.session.get('wishlist'):
             request.session['wishlist'] = list()
         else:
             request.session['wishlist'] = list(request.session['wishlist'])
-        items = next((item for item in request.session['wishlist'] if item['id']==id),False)
+        items = next(
+            (item for item in request.session['wishlist'] if item['id'] == id), False)
     add_data = {
-        'id':id,
+        'id': id,
     }
     if not items:
         request.session['wishlist'].append(add_data)
         request.session.modifier = True
     return redirect('index')
+
 
 @csrf_exempt
 def remove_wishlist(request):
@@ -96,6 +102,4 @@ def remove_wishlist(request):
     except:
         pass
     request.session.modifier = True
-    return JsonResponse({'status':'ok'})
-
-
+    return JsonResponse({'status': 'ok'})
